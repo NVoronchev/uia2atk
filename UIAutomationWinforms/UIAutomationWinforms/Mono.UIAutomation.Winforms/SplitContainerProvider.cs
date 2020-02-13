@@ -47,7 +47,7 @@ namespace Mono.UIAutomation.Winforms
 		
 		#region FragmentRootControlProvider: Specializations
 		
-		public override void InitializeChildControlStructure ()
+		protected override void InitializeChildControlStructure ()
 		{
 			SplitContainer splitContainer = (SplitContainer) Control;
 			
@@ -63,7 +63,7 @@ namespace Mono.UIAutomation.Winforms
 			}
 		}
 		
-		public override void FinalizeChildControlStructure ()
+		protected override void FinalizeChildControlStructure ()
 		{
 			if (panel1 != null) {
 				panel1.Terminate ();
