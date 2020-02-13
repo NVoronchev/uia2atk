@@ -216,7 +216,7 @@ namespace Mono.UIAutomation.Winforms
 				return base.GetListItemBehaviorRealization (behavior, listItem);
 		}
 
-		public override void InitializeChildControlStructure ()
+		protected override void InitializeChildControlStructure ()
 		{
 			base.InitializeChildControlStructure ();
 
@@ -232,7 +232,7 @@ namespace Mono.UIAutomation.Winforms
 			}
 		}
 
-		public override void FinalizeChildControlStructure ()
+		protected override void FinalizeChildControlStructure()
 		{
 			base.FinalizeChildControlStructure ();
 			
@@ -347,7 +347,7 @@ namespace Mono.UIAutomation.Winforms
 				return items;
 			}
 
-			public override void InitializeChildControlStructure ()
+			protected override void InitializeChildControlStructure ()
 			{
 				DataGridView.Columns.CollectionChanged += OnColumnsCollectionChanged;
 				
@@ -355,7 +355,7 @@ namespace Mono.UIAutomation.Winforms
 					UpdateCollection (column, CollectionChangeAction.Add);
 			}
 
-			public override void FinalizeChildControlStructure ()
+			protected override void FinalizeChildControlStructure()
 			{
 				base.FinalizeChildControlStructure ();
 
@@ -554,7 +554,7 @@ namespace Mono.UIAutomation.Winforms
 					return base.GetProviderPropertyValue (propertyId);
 			}
 
-			public override void InitializeChildControlStructure ()
+			protected override void InitializeChildControlStructure ()
 			{
 				foreach (SWF.DataGridViewColumn column in datagridview.Columns)
 					UpdateCollection (column, CollectionChangeAction.Add);
@@ -562,7 +562,7 @@ namespace Mono.UIAutomation.Winforms
 				datagridview.Columns.CollectionChanged += OnColumnsCollectionChanged;
 			}
 
-			public override void FinalizeChildControlStructure ()
+			protected override void FinalizeChildControlStructure()
 			{
 				base.FinalizeChildControlStructure ();
 
@@ -953,7 +953,7 @@ namespace Mono.UIAutomation.Winforms
 				             new DataItemComboBoxExpandCollapseProviderBehavior (this));
 			}
 
-			public override void InitializeChildControlStructure ()
+			protected override void InitializeChildControlStructure ()
 			{
 				if (listboxProvider == null) {
 					listboxProvider = new DataGridViewDataItemComboBoxListBoxProvider (this);
@@ -967,7 +967,7 @@ namespace Mono.UIAutomation.Winforms
 				}
 			}
 
-			public override void FinalizeChildControlStructure ()
+			protected override void FinalizeChildControlStructure()
 			{
 				if (listboxProvider != null) {
 					listboxProvider.Terminate ();
@@ -1025,7 +1025,7 @@ namespace Mono.UIAutomation.Winforms
 				             GetBehaviorRealization (SelectionPatternIdentifiers.Pattern));
 			}
 
-			public override void InitializeChildControlStructure ()
+			protected override void InitializeChildControlStructure ()
 			{
 				base.InitializeChildControlStructure ();
 
