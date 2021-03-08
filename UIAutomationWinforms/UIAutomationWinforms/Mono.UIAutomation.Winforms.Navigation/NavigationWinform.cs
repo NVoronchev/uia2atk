@@ -33,7 +33,7 @@ using Mono.UIAutomation.Winforms.UserCustom;
 
 namespace Mono.UIAutomation.Winforms.Navigation
 {
-	internal partial class NavigationWinform
+	internal class NavigationWinform
 	{
 		private static bool NavigationTreeErrAsException = (EnvironmentVaribles.MONO_UIA_NAVIGATION_TREE_ERR == MONO_UIA_NAVIGATION_TREE_ERR.Exception);
 
@@ -103,11 +103,11 @@ namespace Mono.UIAutomation.Winforms.Navigation
 			}
 		}
 
-		public FragmentControlProvider Parent { get; protected set; }
-		public FragmentControlProvider PreviousWinformSibling { get; protected set; }
-		public FragmentControlProvider NextWinformSibling { get; protected set; }
-		public FragmentControlProvider FirstWinformChild { get; protected set; }
-		public FragmentControlProvider LastWinformChild { get; protected set; }
+		public FragmentControlProvider Parent { get; private set; }
+		public FragmentControlProvider PreviousWinformSibling { get; private set; }
+		public FragmentControlProvider NextWinformSibling { get; private set; }
+		public FragmentControlProvider FirstWinformChild { get; private set; }
+		public FragmentControlProvider LastWinformChild { get; private set; }
 
 		public void InsertChildBefore (FragmentControlProvider newChild, FragmentControlProvider baseChild)
 		{
