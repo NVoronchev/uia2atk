@@ -40,6 +40,8 @@ namespace Mono.UIAutomation.Winforms
 
 	internal static class ProviderFactory
 	{	
+		private static string ITV_TMP_GIT_COMMIT = "15da949ffc8b+";
+
 		#region Static Fields
 		
 		// NOTE: This may not be the best place to track this...however
@@ -68,6 +70,7 @@ namespace Mono.UIAutomation.Winforms
 
 		static ProviderFactory ()
 		{
+			Console.WriteLine($"*** UIAutomationWinforms.dll: ITV_TMP_GIT_COMMIT={ITV_TMP_GIT_COMMIT}");
 			Catalog.Init (Globals.CatalogName, Globals.LocalePath);
 			InitializeProviderHash ();
 			DesktopProvider = InitializeDesktopProvider ();

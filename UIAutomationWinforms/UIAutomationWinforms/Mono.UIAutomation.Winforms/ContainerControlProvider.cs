@@ -33,7 +33,6 @@ namespace Mono.UIAutomation.Winforms
 	internal class ContainerControlProvider
 		: ScrollableControlProvider
 	{
-
 		public ContainerControlProvider (SWF.ContainerControl panel) : base (panel)
 		{
 		}

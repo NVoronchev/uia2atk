@@ -643,5 +643,8 @@ $(build_xamlg_list): %.xaml.g.cs: %.xaml
 	xamlg '$<'
 
 $(ASSEMBLY) $(ASSEMBLY_MDB): $(build_sources) $(build_resources) $(build_datafiles) $(DLL_REFERENCES) $(PROJECT_REFERENCES) $(build_xamlg_list) $(build_satellite_assembly_list)
+	repo_revision=$$(git describe --match=NeVeRmAtCh --always --abbrev=12 --dirty=+) && \
+		cat Mono.UIAutomation.Winforms/ProviderFactory.cs | sed -E "s/(private\s+static\s+string\s+ITV_TMP_GIT_COMMIT\s*=\s*\").*(\"\s*;)/\1$${repo_revision}\2/" > Mono.UIAutomation.Winforms/ProviderFactory.cs.mod && \
+		mv -v Mono.UIAutomation.Winforms/ProviderFactory.cs.mod Mono.UIAutomation.Winforms/ProviderFactory.cs
 	mkdir -p $(shell dirname $(ASSEMBLY))
 	$(ASSEMBLY_COMPILER_COMMAND) $(ASSEMBLY_COMPILER_FLAGS) -out:$(ASSEMBLY) -target:$(COMPILE_TARGET) $(build_sources_embed) $(build_resources_embed) $(build_references_ref)
