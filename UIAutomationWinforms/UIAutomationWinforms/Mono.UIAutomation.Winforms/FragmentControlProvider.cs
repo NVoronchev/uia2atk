@@ -203,9 +203,7 @@ namespace Mono.UIAutomation.Winforms
 				return;
 			}
 			
-			var recursive = true;
-			if (recursive)
-				child.FinalizeChildControlStructure ();
+			child.FinalizeChildControlStructure ();  // Always recursive
 
 			NotifyOnChildProviderRemoved (child, raiseEvent);
 

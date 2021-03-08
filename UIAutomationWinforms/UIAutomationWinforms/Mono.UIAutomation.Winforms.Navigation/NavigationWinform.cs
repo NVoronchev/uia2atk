@@ -147,6 +147,15 @@ namespace Mono.UIAutomation.Winforms.Navigation
 		{
 			if (child == null)
 				throw new ArgumentNullException ("child");
+
+			if (child.Navigation.HasWinformsChildren ()) {
+				var errMsg = GetRemoveChildErrorMessage (child);
+				if (NavigationTreeErrAsException)
+					throw new ArgumentException (errMsg);
+				else
+					Log.Error (errMsg);
+			}
+
 			RemoveWinformChild (child);
 		}
 
@@ -222,6 +231,7 @@ namespace Mono.UIAutomation.Winforms.Navigation
 			NextWinformSibling = null;
 			FirstWinformChild = null;
 			LastWinformChild = null;
+			UserCustomProvider = null;
 		}
 
 		public bool IsCleared ()
@@ -229,19 +239,39 @@ namespace Mono.UIAutomation.Winforms.Navigation
 			return Parent == null && PreviousWinformSibling == null  && NextWinformSibling == null; // && _chainWinforms.Count == 0 && _chainCustoms.Count == 0;
 		}
 
+		public bool HasWinformsChildren ()
+		{
+			if (FirstWinformChild != null && LastWinformChild != null)
+				return true;
+			if (FirstWinformChild == null && LastWinformChild == null)
+				return false;
+			throw new Exception (ToStringDetailed ());
+		}
+
 		public override string ToString ()
 		{
 			return $"<{this.GetType ()}:{Provider}>";
+		}
+
+		private string GetRemoveChildErrorMessage (FragmentControlProvider child)
+		{
+			var errMsg =
+				$"RemoveChildErrorMessage:"
+				+ Environment.NewLine +  "  this.Provider:" + Environment.NewLine + ToStringDetailed (indent: 4)
+				+ Environment.NewLine +  "  child:" + Environment.NewLine + child.Navigation.ToStringDetailed (indent: 4)
+				+ Environment.NewLine + $"  *** Set env variable MONO_UIA_NAVIGATION_TREE_ERR=(log|exception) to log an error or throw an Exception."
+				                      +  " Option 'log' is default. ***";
+			return errMsg;
 		}
 
 		private string GetNewChildIsClearedErrorMessage (FragmentControlProvider newChild)
 		{
 			var errMsg =
 				$"NewChildIsClearedError:"
-				+ Environment.NewLine +  "  this.Provider:" + Environment.NewLine + this.Provider.Navigation.ToStringDetailed (indent: 4)
+				+ Environment.NewLine +  "  this.Provider:" + Environment.NewLine + ToStringDetailed (indent: 4)
 				+ Environment.NewLine +  "  newChild:" + Environment.NewLine + newChild.Navigation.ToStringDetailed (indent: 4)
 				+ Environment.NewLine +  "  Old _parent:" + Environment.NewLine + $"{newChild.Navigation.Parent?.Navigation.ToStringDetailed (indent: 4)}"
-				+ Environment.NewLine + $"  *** Set env variable MONO_UIA_NAVIGATION_TREE_ERR=(log|exception) to throw an Exception or correct error amd just log it."
+				+ Environment.NewLine + $"  *** Set env variable MONO_UIA_NAVIGATION_TREE_ERR=(log|exception) to log an error or throw an Exception."
 				                      +  " Option 'log' is default. ***";
 			return errMsg;
 		}
