@@ -35,7 +35,7 @@ namespace Mono.UIAutomation.Winforms.Navigation
 	{
 		protected UserCustomFragmentProviderWrapper UserCustomProviderWrapper { get; private set; } = null;
 
-		protected List<UserCustomFragmentProviderWrapper> Children = new List<UserCustomFragmentProviderWrapper> ();
+		private readonly List<UserCustomFragmentProviderWrapper> Children = new List<UserCustomFragmentProviderWrapper> ();
 
 		public abstract IRawElementProviderFragment Parent { get; protected set; }
 		public abstract IRawElementProviderFragment NextSibling { get; }
@@ -45,8 +45,8 @@ namespace Mono.UIAutomation.Winforms.Navigation
 		{
 			get 
 			{
-				SyncChildren ();
-				return Children.FirstOrDefault ();
+				var edges = SyncChildren ();
+				return edges.First;
 			}
 		}
 
@@ -54,8 +54,8 @@ namespace Mono.UIAutomation.Winforms.Navigation
 		{
 			get 
 			{
-				SyncChildren ();
-				return Children.LastOrDefault ();
+				var edges = SyncChildren ();
+				return edges.Last;
 			}
 		}
 
@@ -90,10 +90,10 @@ namespace Mono.UIAutomation.Winforms.Navigation
 			Helper.RaiseStructureChangedEvent (StructureChangeType.ChildrenInvalidated, UserCustomProviderWrapper);
 		}
 
-		protected void SyncChildren ()
+		private ChildrenCollectionEdges SyncChildren ()
 		{
 			if (_terminated)
-				return;
+				return new ChildrenCollectionEdges (null, null);;
 
 			var current = InterateUserCustomChildren ().ToArray ();
 
@@ -119,6 +119,11 @@ namespace Mono.UIAutomation.Winforms.Navigation
 					Helper.RaiseStructureChangedEvent (StructureChangeType.ChildrenInvalidated, newWrapper.Navigation.Parent);
 				}
 			}
+
+			var first = Children.FirstOrDefault (ch => ch.WrappedFragmentProvider == current.FirstOrDefault ());
+			var last = Children.LastOrDefault (ch => ch.WrappedFragmentProvider == current.LastOrDefault ());
+			var edges = new ChildrenCollectionEdges (first, last);
+			return edges;
 		}
 
 		private IEnumerable<IRawElementProviderFragment> InterateUserCustomChildren ()
@@ -136,6 +141,18 @@ namespace Mono.UIAutomation.Winforms.Navigation
 				if (ucp == lastUpc)
 					yield break;
 				ucp = ucp.Navigate (NavigateDirection.NextSibling);
+			}
+		}
+
+		private struct ChildrenCollectionEdges
+		{
+			public readonly UserCustomFragmentProviderWrapper First;
+			public readonly UserCustomFragmentProviderWrapper Last;
+
+			public ChildrenCollectionEdges(UserCustomFragmentProviderWrapper first, UserCustomFragmentProviderWrapper last)
+			{
+				First = first;
+				Last = last;
 			}
 		}
 	}
